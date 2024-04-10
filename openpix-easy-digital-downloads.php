@@ -92,11 +92,25 @@ class EDD_OpenPix
 
         $this->validateWebhook($rawBody, $data);
 
+        $evento = $data['evento'] ?? '';
+
+        if ($evento === 'teste_webhook') {
+            return $this->handleTestWebhook();
+        }
+
         $event = $data['event'];
 
         if ($event === 'OPENPIX:CHARGE_COMPLETED') {
             return $this->handleChargeCompletedWebhook($data);
         }
+    }
+
+    public function handleTestWebhook()
+    {
+        header('HTTP/1.2 200 OK');
+        echo json_encode([
+            'message' => 'Successfully tested webhook.',
+        ]);
     }
 
     public function handleChargeCompletedWebhook($data)
